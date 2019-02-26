@@ -15,9 +15,15 @@ const base = [
 const RED = 1;
 const BLUE = 2;
 
+const dx = [0, 1, 1, 0, -1, -1];
+const dy = [-1, -1, 0, 1, 1, 0];
+
 class Board extends Component {
   constructor(props) {
     super(props);
+
+    this.dfs = this.dfs.bind(this);
+    this.winner = this.winner.bind(this);
 
     this.boundary = this.boundary.bind(this);
     this.click = this.click.bind(this);
@@ -39,8 +45,53 @@ class Board extends Component {
     };
   }
 
+  dfs(who, x, y) {
+    if (who === RED && y === this.props.n - 1) {
+      return true;
+    }
+    if (who === BLUE && x === this.props.n - 1) {
+      return true;
+    }
+
+    const pair = `${x} ${y}`;
+    this.M[pair] = true;
+    for (let d = 0; d < dx.length; d++) {
+      const nx = x + dx[d];
+      const ny = y + dy[d];
+      if (nx < 0 || ny < 0 || nx >= this.props.n || ny >= this.props.n) {
+        continue;
+      }
+
+      const npair = `${nx} ${ny}`;
+      if (!(npair in this.M) && this.state.board[nx][ny] === who) {
+        if (this.dfs(who, nx, ny)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  winner() {
+    for (let i = 0; i < this.props.n; i++) {
+      if (this.state.board[i][0] === RED) {
+        this.M = {};
+        if (this.dfs(RED, i, 0)) {
+          return RED;
+        }
+      }
+      if (this.state.board[0][i] === BLUE) {
+        this.M = {};
+        if (this.dfs(BLUE, 0, i)) {
+          return BLUE;
+        }
+      }
+    }
+    return 0;
+  }
+
   componentDidMount() {
-    this.maybePlay(RED, null);
+    this.maybePlay(this.state.turn, null);
   }
 
   maybePlay(player, last) {
@@ -51,7 +102,7 @@ class Board extends Component {
           this.setState({blocked: false});
           this.click(x, y);
         });
-      }, typeof this.props.players[other - 1] !== 'string' ? 1000 : 0);
+      }, typeof this.props.players[other - 1] !== 'string' ? this.props.delay : 0);
     } else {
       this.setState({blocked: false});
     }
@@ -68,7 +119,15 @@ class Board extends Component {
 
     const turn = this.state.turn === RED ? BLUE : RED;
     this.setState({blocked: true, board, turn});
-    this.maybePlay(turn, [X, Y]);
+
+    window.setTimeout(() => {
+      if (this.winner()) {
+        alert('Game over!');
+        return;
+      }
+
+      this.maybePlay(turn, [X, Y]);
+    }, 0);
   }
 
   boundary(which) {
@@ -160,6 +219,7 @@ class Board extends Component {
 }
 
 Board.propTypes = {
+  delay: PropTypes.number,
   n: PropTypes.number,
   players: PropTypes.array,
 };
