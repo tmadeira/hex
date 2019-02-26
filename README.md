@@ -1,68 +1,16 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+hex
+==
 
-## Available Scripts
+This is an implementation of the Hex board game. According to Wikipedia,
 
-In the project directory, you can run:
+> Hex is a strategy board game for two players played on a hexagonal grid, theoretically of any size and several possible shapes, but traditionally as an 11×11 rhombus. Players alternate placing markers or stones on unoccupied spaces in an attempt to link their opposite sides of the board in an unbroken chain. One player must win; there are no draws. The game has deep strategy, sharp tactics and a profound mathematical underpinning related to the Brouwer fixed-point theorem. It was invented in the 1940s independently by two mathematicians, Piet Hein and John Nash. The game was first marketed as a board game in Denmark under the name Con-tac-tix, and Parker Brothers marketed a version of it in 1952 called Hex; they are no longer in production. Hex can also be played with paper and pencil on hexagonally ruled graph paper.
 
-### `npm start`
+**See it live at [hex-game.surge.sh](http://hex-game.surge.sh/).**
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Development
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Install [yarn](https://yarnpkg.com) and run `yarn start`.
 
-### `npm test`
+## Deployment
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Install [surge](https://surge.sh/), run `yarn build` and `surge build hex-game.surge.sh`.
