@@ -27,9 +27,9 @@ polygon {
 }
 
 .red {
-  fill: rgba(255, 0, 0, 0.5);
+  fill: rgba(255, 0, 0, 0.3);
 }
 
 .blue {
-  fill: rgba(0, 0, 255, 0.5);
+  fill: rgba(0, 0, 255, 0.3);
 }
