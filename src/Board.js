@@ -22,6 +22,7 @@ class Board extends Component {
     this.boundary = this.boundary.bind(this);
     this.click = this.click.bind(this);
     this.color = this.color.bind(this);
+    this.maybePlay = this.maybePlay.bind(this);
 
     const board = Array(props.n);
     for (let i = 0; i < props.n; i++) {
@@ -32,23 +33,42 @@ class Board extends Component {
     }
 
     this.state = {
+      blocked: true,
       board: board,
       turn: RED,
     };
   }
 
+  componentDidMount() {
+    this.maybePlay(RED, null);
+  }
+
+  maybePlay(player, last) {
+    const other = player === RED ? BLUE : RED;
+    if (typeof this.props.players[player - 1] !== 'string') {
+      window.setTimeout(() => {
+        this.props.players[player - 1].play(this.state.board, player, last, (x, y) => {
+          this.setState({blocked: false});
+          this.click(x, y);
+        });
+      }, typeof this.props.players[other - 1] !== 'string' ? 1000 : 0);
+    } else {
+      this.setState({blocked: false});
+    }
+  }
+
   click(X, Y) {
     const board = this.state.board;
 
-    if (board[X][Y]) {
+    if (this.state.blocked || board[X][Y]) {
       return;
     }
 
     board[X][Y] = this.state.turn;
-    this.setState({
-      board: board,
-      turn: this.state.turn === RED ? BLUE : RED,
-    });
+
+    const turn = this.state.turn === RED ? BLUE : RED;
+    this.setState({blocked: true, board, turn});
+    this.maybePlay(turn, [X, Y]);
   }
 
   boundary(which) {
@@ -141,6 +161,7 @@ class Board extends Component {
 
 Board.propTypes = {
   n: PropTypes.number,
+  players: PropTypes.array,
 };
 
 export default Board;
