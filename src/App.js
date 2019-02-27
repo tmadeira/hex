@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 import Board from './Board';
 
-import random from './players/random';
+import minimax from './players/minimax';
+import {heuristic} from './algorithms/smallest';
 
 import './App.css';
 
@@ -11,8 +12,8 @@ class App extends Component {
     const n = 9;
     const delay = 10;
 
-    const a = new random(n);
-    const b = new random(n);
+    const a = 'human';
+    const b = new minimax(n, heuristic);
 
     return (
       <div className="App">

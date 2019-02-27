@@ -14,6 +14,34 @@ const bfs = (board, start, player) => {
     const [x, y] = start[i];
     queue.push([x, y]);
     D[`${x} ${y}`] = 0;
+
+    const connectedQueue = [];
+    connectedQueue.push([x, y]);
+    while (connectedQueue.length > 0) {
+      const [ox, oy] = connectedQueue.shift();
+
+      for (let e = 0; e < dx.length; e++) {
+        const px = ox + dx[e];
+        const py = oy + dy[e];
+
+        if (px < 0 || py < 0 || px >= n || py >= n) {
+          continue;
+        }
+
+        if (board[px][py] !== player) {
+          continue;
+        }
+
+        const ppair = `${px} ${py}`;
+        if (ppair in D) {
+          continue;
+        }
+
+        D[`${px} ${py}`] = 0;
+        queue.push([px, py]);
+        connectedQueue.push([px, py]);
+      }
+    }
   }
 
   while (queue.length > 0) {
@@ -101,4 +129,10 @@ const smallest = (board) => {
   return [rs, bs];
 };
 
+const heuristic = (board, whoami) => {
+  const [red, blue] = smallest(board);
+  return whoami === 1 ? blue - red : red - blue;
+};
+
 export default smallest;
+export {heuristic};
