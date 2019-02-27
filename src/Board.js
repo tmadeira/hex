@@ -151,7 +151,7 @@ class Board extends Component {
 
     return (
       <React.Fragment>
-        <svg version="1.1" viewBox={`-2 -2 ${w+4} ${h+4}`}>
+        <svg version="1.1" viewBox={`-2 -2 ${w+4} ${h+4}`} width={w+6} height={h+6}>
           {
             Array.from(Array(this.props.n).keys()).map(i =>
               Array.from(Array(this.props.n).keys()).map(j =>
