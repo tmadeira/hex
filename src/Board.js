@@ -87,7 +87,7 @@ class Board extends Component {
       console.log(smallest(this.state.board));
 
       this.maybePlay(turn, [X, Y]);
-    }, 0);
+    }, 100);
   }
 
   boundary(which) {
