@@ -7,6 +7,10 @@ This is an implementation of the Hex board game. According to Wikipedia,
 
 **See it live at [hex-game.surge.sh](http://hex-game.surge.sh/).**
 
+You can find (or create) different players (e.g. random, minimax algorithm using alpha-beta pruning) in `src/players`.
+
+You can change the board size and the players in the game in `src/App.js`. By default, the game is 9x9 and the players are a human (player 1, red) and a minimax AI using the heuristic function in `algorithms/smallest.js` (player 2, blue).
+
 ## Development
 
 Install [yarn](https://yarnpkg.com) and run `yarn start`.
