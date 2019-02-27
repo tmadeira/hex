@@ -4,21 +4,15 @@
   padding: 0;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-}
-
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
 }
 
-#root, .App, svg {
-  max-height: 100%;
-  max-width: 100%;
+svg {
+  height: 100vh;
+  max-width: 100vw;
 }
 
 polygon {
