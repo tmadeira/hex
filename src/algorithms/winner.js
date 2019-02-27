@@ -6,7 +6,7 @@ const dy = [-1, -1, 0, 1, 1, 0];
 
 const winner = (board) => {
   let M = {};
-  const n = board.length;
+  const n = board.length - 1;
 
   const dfs = (who, x, y) => {
     if (who === RED && y === n - 1) {

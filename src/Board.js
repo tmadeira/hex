@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import winner from './algorithms/winner';
+import smallest from './algorithms/smallest';
 
 const scale = 30;
 
@@ -26,11 +27,17 @@ class Board extends Component {
     this.color = this.color.bind(this);
     this.maybePlay = this.maybePlay.bind(this);
 
-    const board = Array(props.n);
-    for (let i = 0; i < props.n; i++) {
-      board[i] = Array(props.n);
-      for (let j = 0; j < props.n; j++) {
-        board[i][j] = 0;
+    const board = Array(props.n + 1);
+    for (let i = 0; i < props.n + 1; i++) {
+      board[i] = Array(props.n + 1);
+      for (let j = 0; j < props.n + 1; j++) {
+        if (i === props.n) {
+          board[i][j] = BLUE;
+        } else if (j === props.n) {
+          board[i][j] = RED;
+        } else {
+          board[i][j] = 0;
+        }
       }
     }
 
@@ -76,6 +83,8 @@ class Board extends Component {
         alert('Game over!');
         return;
       }
+
+      console.log(smallest(this.state.board));
 
       this.maybePlay(turn, [X, Y]);
     }, 0);

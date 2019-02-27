@@ -18,8 +18,12 @@ class minimax extends player {
     const rec = (depth, max, alpha, beta) => {
       const turn = max ? whoami : oponent;
       const other = turn === RED ? BLUE : RED;
-      if (depth === 0 || winner(board)) {
+      if (depth === 0) {
         return [this.heuristic(board, max ? turn : other)];
+      }
+
+      if (winner(board)) {
+        return [2 * this.heuristic(board, max ? turn : other)];
       }
 
       if (max) {
@@ -70,7 +74,7 @@ class minimax extends player {
       return [value, move];
     }
 
-    return rec(2, true, -INFINITY, INFINITY);
+    return rec(3, true, -INFINITY, INFINITY);
   }
 
   play(board, whoami, _last, callback) {

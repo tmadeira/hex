@@ -9,7 +9,7 @@ import './App.css';
 
 class App extends Component {
   render() {
-    const n = 9;
+    const n = 5;
     const delay = 10;
 
     const a = 'human';
@@ -17,7 +17,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Board delay={delay} n={n} players={[a, b]} />
+        <Board delay={delay} n={n} players={[b, a]} />
       </div>
     );
   }
