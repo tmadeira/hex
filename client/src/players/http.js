@@ -2,6 +2,10 @@ import player from './player';
 
 class http extends player {
   play(board, whoami, last, callback) {
+    if (whoami === 1) {
+      // TODO: transpose board and last, swap players.
+    }
+
     const body = {
       size: this.n,
       matrix: board,
