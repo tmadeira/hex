@@ -24,33 +24,43 @@ func inBoard(m Move, size int) bool {
 	return true
 }
 
-func connected(b *Board, start, end []Move, id PlayerID) bool {
-	M := make(map[Move]bool)
+func connect(b *Board, start []Move, id PlayerID, M *map[Move]int, dist int) []Move {
+	var connected []Move
 
 	var dfs func(u Move)
 	dfs = func(u Move) {
 		for d := 0; d < 6; d++ {
 			v := Move{u.I + di[d], u.J + dj[d]}
-			if M[v] {
+			if _, ok := (*M)[v]; ok {
 				continue
 			}
 
 			if inBoard(v, b.Size) && b.Matrix[v.I][v.J] == id {
-				M[v] = true
+				(*M)[v] = dist
+				connected = append(connected, v)
 				dfs(v)
 			} else if !inBoard(v, b.Size) {
-				M[v] = true
+				(*M)[v] = dist
+				connected = append(connected, v)
 			}
 		}
 	}
 
 	for i := 0; i < len(start); i++ {
-		M[start[i]] = true
+		(*M)[start[i]] = dist
+		connected = append(connected, start[i])
 		dfs(start[i])
 	}
 
+	return connected
+}
+
+func connected(b *Board, start, end []Move, id PlayerID) bool {
+	M := make(map[Move]int)
+	connect(b, start, id, &M, 0)
+
 	for i := 0; i < len(end); i++ {
-		if M[end[i]] {
+		if _, ok := M[end[i]]; ok {
 			return true
 		}
 	}
