@@ -24,30 +24,30 @@ func inBoard(m Move, size int) bool {
 	return true
 }
 
-func connect(b *Board, start []Move, id PlayerID, M *map[Move]int, dist int) []Move {
+func connect(b *Board, start []Move, id PlayerID, M [][]int, dist int) []Move {
 	var connected []Move
 
 	var dfs func(u Move)
 	dfs = func(u Move) {
 		for d := 0; d < 6; d++ {
 			v := Move{u.I + di[d], u.J + dj[d]}
-			if _, ok := (*M)[v]; ok {
+			if M[v.I+3][v.J+3] != -1 {
 				continue
 			}
 
 			if inBoard(v, b.Size) && b.Matrix[v.I][v.J] == id {
-				(*M)[v] = dist
+				M[v.I+3][v.J+3] = dist
 				connected = append(connected, v)
 				dfs(v)
 			} else if !inBoard(v, b.Size) {
-				(*M)[v] = dist
+				M[v.I+3][v.J+3] = dist
 				connected = append(connected, v)
 			}
 		}
 	}
 
 	for i := 0; i < len(start); i++ {
-		(*M)[start[i]] = dist
+		M[start[i].I+3][start[i].J+3] = dist
 		connected = append(connected, start[i])
 		dfs(start[i])
 	}
@@ -56,11 +56,17 @@ func connect(b *Board, start []Move, id PlayerID, M *map[Move]int, dist int) []M
 }
 
 func connected(b *Board, start, end []Move, id PlayerID) bool {
-	M := make(map[Move]int)
-	connect(b, start, id, &M, 0)
+	M := make([][]int, b.Size+6)
+	for i := range M {
+		M[i] = make([]int, b.Size+6)
+		for j := range M[i] {
+			M[i][j] = -1
+		}
+	}
+	connect(b, start, id, M, 0)
 
 	for i := 0; i < len(end); i++ {
-		if _, ok := M[end[i]]; ok {
+		if M[end[i].I+3][end[i].J+3] != -1 {
 			return true
 		}
 	}

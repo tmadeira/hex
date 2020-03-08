@@ -53,3 +53,29 @@ func TestMinDistance(t *testing.T) {
 		})
 	}
 }
+
+func benchmarkMinDistance(sz int, b *testing.B) {
+	board := &Board{
+		Size: sz,
+	}
+	board.Matrix = make([][]PlayerID, sz)
+	for i := range board.Matrix {
+		board.Matrix[i] = make([]PlayerID, sz)
+	}
+
+	for n := 0; n < b.N; n++ {
+		minDistance(board, Max)
+	}
+}
+
+func BenchmarkMinDistance7(b *testing.B) {
+	benchmarkMinDistance(7, b)
+}
+
+func BenchmarkMinDistance9(b *testing.B) {
+	benchmarkMinDistance(9, b)
+}
+
+func BenchmarkMinDistance11(b *testing.B) {
+	benchmarkMinDistance(11, b)
+}
