@@ -1,6 +1,9 @@
 package ai
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 // PlayerID identifies a player (NoOne, Max or Min).
 type PlayerID int
@@ -28,11 +31,29 @@ func NewPlayer(id PlayerID, strategy string, heuristic HeuristicFunc) *Player {
 // Play receives a board state and returns a move and the outcome it expects
 // from that move.
 func (p *Player) Play(b Board) (*Move, int, error) {
+	Print(b, false)
+
+	start := time.Now()
+
+	var mv *Move
+	var outcome int
 	switch p.Strategy {
 	case "minimax":
-		mv, v := p.Minimax(b, 4)
-		return mv, v, nil
+		mv, outcome = p.Minimax(b, 4)
 	default:
 		return nil, 0, fmt.Errorf("invalid strategy: %s", p.Strategy)
 	}
+
+	if mv == nil {
+		return nil, 0, fmt.Errorf("no movement")
+	}
+
+	elapsed := time.Since(start)
+
+	fmt.Printf("> AI took %s.\n", elapsed)
+
+	b.Matrix[mv.I][mv.J] = p.ID
+	Print(b, true)
+
+	return mv, outcome, nil
 }
