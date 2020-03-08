@@ -46,10 +46,10 @@ func connect(b *Board, start []Move, id PlayerID, M [][]int, dist int) []Move {
 		}
 	}
 
-	for i := 0; i < len(start); i++ {
-		M[start[i].I+3][start[i].J+3] = dist
-		connected = append(connected, start[i])
-		dfs(start[i])
+	for _, s := range start {
+		M[s.I+3][s.J+3] = dist
+		connected = append(connected, s)
+		dfs(s)
 	}
 
 	return connected
@@ -65,8 +65,8 @@ func connected(b *Board, start, end []Move, id PlayerID) bool {
 	}
 	connect(b, start, id, M, 0)
 
-	for i := 0; i < len(end); i++ {
-		if M[end[i].I+3][end[i].J+3] != -1 {
+	for _, e := range end {
+		if M[e.I+3][e.J+3] != -1 {
 			return true
 		}
 	}

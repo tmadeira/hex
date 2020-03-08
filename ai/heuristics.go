@@ -37,7 +37,7 @@ func minDistance(b *Board, player PlayerID) int {
 	end := 0
 
 	s := make([]Move, b.Size)
-	for i := 0; i < b.Size; i++ {
+	for i := range s {
 		if player == Max {
 			s[i] = Move{i, -1}
 		} else {
