@@ -161,7 +161,7 @@ class Board extends Component {
           {
             Array.from(Array(this.props.n).keys()).map(i =>
               Array.from(Array(this.props.n).keys()).map(j =>
-                <polygon className={this.color(i, j)} key={`${i} ${j}`} onClick={() => this.click(i, j)} points={this.points(i, j)} />
+                <polygon className={this.color(i, j)} key={`${i} ${j}`} data-coords={`${i} ${j}`} onClick={() => this.click(i, j)} points={this.points(i, j)} />
               )
             )
           }
