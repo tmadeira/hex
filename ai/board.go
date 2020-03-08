@@ -115,3 +115,47 @@ func Winner(b *Board) PlayerID {
 
 	return NoOne
 }
+
+// possibleMoves return the possible moves in the given board, ordering
+// moves by distance from the last move.
+func possibleMoves(b *Board) []Move {
+	var possible []Move
+
+	M := make([][]bool, b.Size)
+	for i := range M {
+		M[i] = make([]bool, b.Size)
+	}
+
+	queue := make([]Move, b.Size*b.Size)
+	start := 0
+	end := 1
+	if b.LastMove != nil {
+		queue[0] = *b.LastMove
+		M[b.LastMove.I][b.LastMove.J] = true
+	} else {
+		queue[0] = Move{0, 0}
+		M[0][0] = true
+	}
+
+	for start < end {
+		u := queue[start]
+		start++
+		for d := 0; d < 6; d++ {
+			v := Move{u.I + di[d], u.J + dj[d]}
+			if !inBoard(v, b.Size) {
+				continue
+			}
+			if M[v.I][v.J] {
+				continue
+			}
+			M[v.I][v.J] = true
+			if b.Matrix[v.I][v.J] == NoOne {
+				possible = append(possible, v)
+			}
+			queue[end] = v
+			end++
+		}
+	}
+
+	return possible
+}

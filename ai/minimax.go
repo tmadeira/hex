@@ -86,37 +86,35 @@ func (p *Player) alphaBeta(depth, alpha, beta int, player PlayerID, board *Board
 		return nil, v
 	}
 
-	var mv *Move
-	for i := 0; i < board.Size; i++ {
-		for j := 0; j < board.Size; j++ {
-			if board.Matrix[i][j] == NoOne {
-				board.Matrix[i][j] = player
-				_, v := p.alphaBeta(depth-1, alpha, beta, oponent, board)
-				board.Matrix[i][j] = NoOne
+	possible := possibleMoves(board)
+	possible = possible[:20]
 
-				if player == Max && v > best {
-					best = v
-					mv = &Move{i, j}
-				} else if player == Min && v < best {
-					best = v
-					mv = &Move{i, j}
-				}
+	var chosen Move
+	for _, current := range possible {
+		last := board.LastMove
+		board.LastMove = &current
+		board.Matrix[current.I][current.J] = player
+		_, v := p.alphaBeta(depth-1, alpha, beta, oponent, board)
+		board.LastMove = last
+		board.Matrix[current.I][current.J] = NoOne
 
-				if player == Max {
-					alpha = max(alpha, v)
-				}
-				if player == Min {
-					beta = min(beta, v)
-				}
+		if (player == Max && v > best) || (player == Min && v < best) {
+			best = v
+			chosen = current
+		}
 
-				if alpha >= beta {
-					return mv, best
-				}
-			}
+		if player == Max {
+			alpha = max(alpha, v)
+		} else {
+			beta = min(beta, v)
+		}
+
+		if alpha >= beta {
+			return &chosen, best
 		}
 	}
 
-	return mv, best
+	return &chosen, best
 }
 
 // ABMinimax runs minimax with alpha-beta pruning in the given board,

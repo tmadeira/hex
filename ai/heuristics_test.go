@@ -30,6 +30,28 @@ func TestMinDistance(t *testing.T) {
 		},
 	}
 
+	boardD := &Board{
+		Size: 5,
+		Matrix: [][]PlayerID{
+			{0, 0, 0, 2, 0},
+			{0, 2, 1, 0, 1},
+			{0, 0, 0, 0, 0},
+			{1, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+	}
+
+	boardE := &Board{
+		Size: 5,
+		Matrix: [][]PlayerID{
+			{0, 2, 0, 0, 0},
+			{2, 1, 0, 0, 0},
+			{1, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+		},
+	}
+
 	tests := []struct {
 		name   string
 		board  *Board
@@ -42,6 +64,10 @@ func TestMinDistance(t *testing.T) {
 		{"board_b_min", boardB, Min, 1},
 		{"board_c_max", boardC, Max, 3},
 		{"board_c_min", boardC, Min, 3},
+		{"board_d_max", boardD, Max, 2},
+		{"board_d_min", boardD, Min, 4},
+		{"board_e_max", boardE, Max, 3},
+		{"board_e_min", boardE, Min, 5},
 	}
 
 	for _, test := range tests {
