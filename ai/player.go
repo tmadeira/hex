@@ -1,3 +1,16 @@
+/*
+Package ai contains a Hex AI.
+
+Usage:
+
+	minDistance, _ := ai.Heuristic("mindistance")
+	player := ai.NewPlayer(ai.Max, "minimax", minDistance)
+	board := ai.Board{
+		Size:   3,
+		Matrix: [][]ai.PlayerID{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+	}
+	move, outcome, _ := player.Play(board)
+*/
 package ai
 
 import (
