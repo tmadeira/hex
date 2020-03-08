@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 
 import Board from './Board';
 
-import minimax from './players/minimax';
-import {heuristic} from './algorithms/smallest';
+import http from './players/http';
 
 import './App.css';
 
@@ -13,7 +12,7 @@ class App extends Component {
     const delay = 10;
 
     const a = 'human';
-    const b = new minimax(n, heuristic);
+    const b = new http(n);
 
     return (
       <div className="App">
