@@ -1,10 +1,6 @@
 import player from './player';
 
 class http extends player {
-  constructor(n) {
-    super(n);
-  }
-
   play(board, whoami, last, callback) {
     const body = {
       size: this.n,
@@ -16,6 +12,7 @@ class http extends player {
 
     const endpoint = 'http://127.0.0.1:8080/play';
     const request = {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -29,4 +26,4 @@ class http extends player {
   }
 }
 
-export default minimax;
+export default http;
