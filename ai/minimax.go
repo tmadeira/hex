@@ -2,27 +2,23 @@ package ai
 
 func (p *Player) minimax(depth int, player PlayerID, board *Board) (*Move, int) {
 	var oponent = Max
-	best := infinity
+	best := infinity + 1
 	if player == Max {
 		oponent = Min
-		best = -infinity
+		best = -infinity - 1
 	}
 
 	// Check if board has a winner.
 	winner := Winner(board)
-	if winner == player {
+	if winner == Max {
 		return nil, infinity
-	} else if winner == oponent {
+	} else if winner == Min {
 		return nil, -infinity
 	}
 
 	// No more depth to recurse; return heuristic.
 	if depth == 0 {
 		v := p.Heuristic(board)
-		if player == Min {
-			v = -v
-		}
-
 		return nil, v
 	}
 
