@@ -8,8 +8,6 @@ class http extends player {
       last: last,
     };
 
-    console.log('body', body);
-
     const endpoint = 'http://127.0.0.1:8080/play';
     const request = {
       method: 'POST',
@@ -20,9 +18,11 @@ class http extends player {
     };
 
     fetch(endpoint, request)
-      .then(response => { console.log(response); });
-
-    // TODO: Make move.
+      .then(response => response.json())
+      .then(data => {
+        console.log('Expected outcome:', data.expectedOutcome);
+        callback(data.move[0], data.move[1]);
+      });
   }
 }
 

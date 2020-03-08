@@ -8,7 +8,7 @@ import './App.css';
 
 class App extends Component {
   render() {
-    const n = 9;
+    const n = 4;
     const delay = 10;
 
     const a = 'human';

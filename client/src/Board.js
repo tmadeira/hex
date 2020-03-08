@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import winner from './algorithms/winner';
-import smallest from './algorithms/smallest';
 
 const scale = 30;
 
@@ -83,8 +82,6 @@ class Board extends Component {
         alert('Game over!');
         return;
       }
-
-      console.log(smallest(this.state.board));
 
       this.maybePlay(turn, [X, Y]);
     }, 100);
