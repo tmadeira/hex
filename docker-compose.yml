@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  ai:
+    build:
+      context: ./ai
+    restart: unless-stopped
+    container_name: ai
+    ports:
+      - "8080:8080"
+  client:
+    build:
+      context: ./client
+    restart: unless-stopped
+    container_name: client
+    volumes:
+      - "./client/src:/usr/src/app/src"
+      - "./client/public:/usr/src/app/public"
+    ports:
+      - "3000:3000"
