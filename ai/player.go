@@ -54,7 +54,7 @@ func (p *Player) Play(b Board) (*Move, int, error) {
 	case "minimax":
 		mv, outcome = p.Minimax(b, 5)
 	case "ab-minimax":
-		mv, outcome = p.ABMinimax(b, 7)
+		mv, outcome = p.ABMinimax(b, 5)
 	default:
 		return nil, 0, fmt.Errorf("invalid strategy: %s", p.Strategy)
 	}
