@@ -13,12 +13,14 @@ func Heuristic(h string) (HeuristicFunc, error) {
 	switch h {
 	case "mindistance":
 		return HeuristicFunc(HeuristicMinDistance), nil
+	case "mindistance-bridges":
+		return HeuristicFunc(HeuristicMinDistanceBridges), nil
 	default:
 		return nil, fmt.Errorf("invalid heuristic: %s", h)
 	}
 }
 
-func minDistance(b *Board, player PlayerID) int {
+func minDistance(b *Board, player PlayerID, bridges bool) int {
 	M := make([][]int, b.Size+6)
 	for i := range M {
 		M[i] = make([]int, b.Size+6)
@@ -44,7 +46,7 @@ func minDistance(b *Board, player PlayerID) int {
 			s[i] = Move{-1, i}
 		}
 	}
-	connected := connect(b, s, player, M, 0)
+	connected := connect(b, s, player, M, 0, bridges)
 
 	for _, v := range connected {
 		if inBoard(v, b.Size) || (player == Max && v.J == -1) || (player == Min && v.I == -1) {
@@ -66,7 +68,7 @@ func minDistance(b *Board, player PlayerID) int {
 				continue
 			}
 			if inBoard(v, b.Size) && b.Matrix[v.I][v.J] != oponent {
-				connected := connect(b, []Move{v}, player, M, M[u.I+3][u.J+3]+1)
+				connected := connect(b, []Move{v}, player, M, M[u.I+3][u.J+3]+1, bridges)
 				for _, v := range connected {
 					if inBoard(v, b.Size) {
 						queue[end] = v
@@ -74,6 +76,38 @@ func minDistance(b *Board, player PlayerID) int {
 					}
 					if (player == Max && v.J == b.Size) || (player == Min && v.I == b.Size) {
 						return M[u.I+3][u.J+3] + 1
+					}
+				}
+			}
+		}
+
+		if bridges {
+			for d := 0; d < 6; d++ {
+				v := Move{u.I + bi[d], u.J + bj[d]}
+				if M[v.I+3][v.J+3] != -1 {
+					continue
+				}
+
+				x := Move{u.I + di[d], u.J + dj[d]}
+				y := Move{u.I + di[(d+1)%6], u.J + dj[(d+1)%6]}
+				if !inBoard(x, b.Size) || !inBoard(y, b.Size) {
+					continue
+				}
+
+				if b.Matrix[x.I][x.J] != NoOne || b.Matrix[y.I][y.J] != NoOne {
+					continue
+				}
+
+				if inBoard(v, b.Size) && b.Matrix[v.I][v.J] != oponent {
+					connected := connect(b, []Move{v}, player, M, M[u.I+3][u.J+3]+1, bridges)
+					for _, v := range connected {
+						if inBoard(v, b.Size) {
+							queue[end] = v
+							end++
+						}
+						if (player == Max && v.J == b.Size) || (player == Min && v.I == b.Size) {
+							return M[u.I+3][u.J+3] + 1
+						}
 					}
 				}
 			}
@@ -87,5 +121,12 @@ func minDistance(b *Board, player PlayerID) int {
 // Max player to win minus the minimum number of moves required for Min
 // player to win.
 func HeuristicMinDistance(b *Board) int {
-	return minDistance(b, Max) - minDistance(b, Min)
+	return minDistance(b, Min, false) - minDistance(b, Max, false)
+}
+
+// HeuristicMinDistanceBridges returns the minimum number of moves
+// required for Max player to win minus the minimum number of moves
+// required for Min player to win considering bridges to be connected.
+func HeuristicMinDistanceBridges(b *Board) int {
+	return minDistance(b, Min, true) - minDistance(b, Max, true)
 }

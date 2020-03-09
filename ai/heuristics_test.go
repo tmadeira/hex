@@ -52,27 +52,69 @@ func TestMinDistance(t *testing.T) {
 		},
 	}
 
+	boardF := &Board{
+		Size: 5,
+		Matrix: [][]PlayerID{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 2, 1, 0},
+			{0, 1, 0, 0, 0},
+			{0, 2, 0, 0, 0},
+		},
+	}
+
+	boardG := &Board{
+		Size: 5,
+		Matrix: [][]PlayerID{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0},
+			{0, 0, 2, 1, 0},
+			{0, 1, 1, 0, 0},
+			{0, 2, 0, 0, 0},
+		},
+	}
+
+	boardH := &Board{
+		Size: 7,
+		Matrix: [][]PlayerID{
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0},
+			{0, 2, 0, 1, 0, 0, 0},
+			{0, 1, 0, 0, 0, 0, 0},
+			{0, 2, 0, 0, 0, 0, 0},
+		},
+	}
+
 	tests := []struct {
-		name   string
-		board  *Board
-		player PlayerID
-		want   int
+		name    string
+		board   *Board
+		player  PlayerID
+		bridges bool
+		want    int
 	}{
-		{"board_a_max", boardA, Max, 2},
-		{"board_a_min", boardA, Min, 2},
-		{"board_b_max", boardB, Max, 3},
-		{"board_b_min", boardB, Min, 1},
-		{"board_c_max", boardC, Max, 3},
-		{"board_c_min", boardC, Min, 3},
-		{"board_d_max", boardD, Max, 2},
-		{"board_d_min", boardD, Min, 4},
-		{"board_e_max", boardE, Max, 3},
-		{"board_e_min", boardE, Min, 5},
+		{"board_a_max", boardA, Max, false, 2},
+		{"board_a_min", boardA, Min, false, 2},
+		{"board_b_max", boardB, Max, false, 3},
+		{"board_b_min", boardB, Min, false, 1},
+		{"board_c_max", boardC, Max, false, 3},
+		{"board_c_min", boardC, Min, false, 3},
+		{"board_d_max", boardD, Max, false, 2},
+		{"board_d_min", boardD, Min, false, 4},
+		{"board_e_max", boardE, Max, false, 3},
+		{"board_e_min", boardE, Min, false, 5},
+		{"board_f_max", boardF, Max, true, 1},
+		{"board_f_min", boardF, Min, true, 2},
+		{"board_g_max", boardG, Max, true, 0},
+		{"board_g_min", boardG, Min, true, 3},
+		{"board_h_max", boardH, Max, true, 1},
+		{"board_h_min", boardH, Min, true, 4},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := minDistance(test.board, test.player)
+			got := minDistance(test.board, test.player, test.bridges)
 			if got != test.want {
 				t.Fatalf("minDistance(%v, %d) = %d; want %d", test.board, test.player, got, test.want)
 			}
@@ -90,7 +132,7 @@ func benchmarkMinDistance(sz int, b *testing.B) {
 	}
 
 	for n := 0; n < b.N; n++ {
-		minDistance(board, Max)
+		minDistance(board, Max, false)
 	}
 }
 

@@ -10,7 +10,7 @@ var (
 	port      = flag.Int("port", 8080, "tcp port to listen")
 	playerID  = flag.Int("pid", 2, "ai player id (1 or 2)")
 	strategy  = flag.String("strategy", "ab-minimax", "ai strategy")
-	heuristic = flag.String("heuristic", "mindistance", "minimax heuristic to use")
+	heuristic = flag.String("heuristic", "mindistance-bridges", "minimax heuristic to use")
 )
 
 func main() {
