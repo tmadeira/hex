@@ -2,9 +2,16 @@ package ai
 
 import "fmt"
 
+// Neighbors.
 var (
 	di = []int{0, 1, 1, 0, -1, -1}
 	dj = []int{-1, -1, 0, 1, 1, 0}
+)
+
+// Bridges.
+var (
+	bi = []int{1, 2, 1, -1, -2, -1}
+	bj = []int{-2, -1, 1, 2, 1, -1}
 )
 
 // Board stores a hex board state.
@@ -24,7 +31,7 @@ func inBoard(m Move, size int) bool {
 	return true
 }
 
-func connect(b *Board, start []Move, id PlayerID, M [][]int, dist int) []Move {
+func connect(b *Board, start []Move, id PlayerID, M [][]int, dist int, bridges bool) []Move {
 	var connected []Move
 
 	var dfs func(u Move)
@@ -42,6 +49,34 @@ func connect(b *Board, start []Move, id PlayerID, M [][]int, dist int) []Move {
 			} else if !inBoard(v, b.Size) {
 				M[v.I+3][v.J+3] = dist
 				connected = append(connected, v)
+			}
+		}
+
+		if bridges {
+			for d := 0; d < 6; d++ {
+				v := Move{u.I + bi[d], u.J + bj[d]}
+				if M[v.I+3][v.J+3] != -1 {
+					continue
+				}
+
+				x := Move{u.I + di[d], u.J + dj[d]}
+				y := Move{u.I + di[(d+1)%6], u.J + dj[(d+1)%6]}
+				if !inBoard(x, b.Size) || !inBoard(y, b.Size) {
+					continue
+				}
+
+				if b.Matrix[x.I][x.J] != NoOne || b.Matrix[y.I][y.J] != NoOne {
+					continue
+				}
+
+				if inBoard(v, b.Size) && b.Matrix[v.I][v.J] == id {
+					M[v.I+3][v.J+3] = dist
+					connected = append(connected, v)
+					dfs(v)
+				} else if !inBoard(v, b.Size) {
+					M[v.I+3][v.J+3] = dist
+					connected = append(connected, v)
+				}
 			}
 		}
 	}
@@ -63,7 +98,7 @@ func connected(b *Board, start, end []Move, id PlayerID) bool {
 			M[i][j] = -1
 		}
 	}
-	connect(b, start, id, M, 0)
+	connect(b, start, id, M, 0, false)
 
 	for _, e := range end {
 		if M[e.I+3][e.J+3] != -1 {
