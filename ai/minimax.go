@@ -87,7 +87,9 @@ func (p *Player) alphaBeta(depth, alpha, beta int, player PlayerID, board *Board
 	}
 
 	possible := possibleMoves(board)
-	possible = possible[:20]
+	if len(possible) > 20 {
+		possible = possible[:20]
+	}
 
 	var chosen Move
 	for _, current := range possible {

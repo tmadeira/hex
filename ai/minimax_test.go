@@ -5,10 +5,6 @@ import (
 	"testing"
 )
 
-func randomPlayer() PlayerID {
-	return PlayerID(rand.Intn(4) % 3)
-}
-
 func benchmarkMinimax(sz, depth int, ab bool, b *testing.B) {
 	rand.Seed(1)
 	p := &Player{
@@ -41,10 +37,10 @@ func BenchmarkABMinimax4_4(b *testing.B) {
 	benchmarkMinimax(4, 4, true, b)
 }
 
-func BenchmarkMinimax4_6(b *testing.B) {
-	benchmarkMinimax(4, 6, false, b)
-}
-
 func BenchmarkABMinimax4_6(b *testing.B) {
 	benchmarkMinimax(4, 6, true, b)
+}
+
+func BenchmarkABMinimax9_4(b *testing.B) {
+	benchmarkMinimax(9, 4, true, b)
 }

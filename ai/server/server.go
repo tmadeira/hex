@@ -87,6 +87,9 @@ func Run(port, pID int, strategy, heuristic string) {
 	player := ai.NewPlayer(playerID, strategy, heuristicFunc)
 	http.HandleFunc("/play", handlePlay(player))
 
+	log.Printf("Created AI player with strategy %s and heuristic %s", strategy, heuristic)
+	log.Printf("Starting server on port %d", port)
+
 	listen := fmt.Sprintf(":%d", port)
 	err = http.ListenAndServe(listen, nil)
 	log.Fatal(err)
