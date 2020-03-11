@@ -114,7 +114,7 @@ func TestMinDistance(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := minDistance(test.board, test.player, test.bridges)
+			got := minDistance(test.board, test.player, test.bridges, false)
 			if got != test.want {
 				t.Fatalf("minDistance(%v, %d) = %d; want %d", test.board, test.player, got, test.want)
 			}
@@ -122,7 +122,7 @@ func TestMinDistance(t *testing.T) {
 	}
 }
 
-func benchmarkMinDistance(sz int, b *testing.B) {
+func benchmarkMinDistance(sz int, bridges, both bool, b *testing.B) {
 	board := &Board{
 		Size: sz,
 	}
@@ -132,18 +132,42 @@ func benchmarkMinDistance(sz int, b *testing.B) {
 	}
 
 	for n := 0; n < b.N; n++ {
-		minDistance(board, Max, false)
+		minDistance(board, Max, bridges, both)
 	}
 }
 
 func BenchmarkMinDistance7(b *testing.B) {
-	benchmarkMinDistance(7, b)
+	benchmarkMinDistance(7, false, false, b)
 }
 
 func BenchmarkMinDistance9(b *testing.B) {
-	benchmarkMinDistance(9, b)
+	benchmarkMinDistance(9, false, false, b)
 }
 
 func BenchmarkMinDistance11(b *testing.B) {
-	benchmarkMinDistance(11, b)
+	benchmarkMinDistance(11, false, false, b)
+}
+
+func BenchmarkMinDistanceBridges7(b *testing.B) {
+	benchmarkMinDistance(7, true, false, b)
+}
+
+func BenchmarkMinDistanceBridges9(b *testing.B) {
+	benchmarkMinDistance(9, true, false, b)
+}
+
+func BenchmarkMinDistanceBridges11(b *testing.B) {
+	benchmarkMinDistance(11, true, false, b)
+}
+
+func BenchmarkMinDistanceBridgesBoth7(b *testing.B) {
+	benchmarkMinDistance(7, true, true, b)
+}
+
+func BenchmarkMinDistanceBridgesBoth9(b *testing.B) {
+	benchmarkMinDistance(9, true, true, b)
+}
+
+func BenchmarkMinDistanceBridgesBoth11(b *testing.B) {
+	benchmarkMinDistance(11, true, true, b)
 }

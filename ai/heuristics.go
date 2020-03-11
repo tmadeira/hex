@@ -15,12 +15,14 @@ func Heuristic(h string) (HeuristicFunc, error) {
 		return HeuristicFunc(HeuristicMinDistance), nil
 	case "mindistance-bridges":
 		return HeuristicFunc(HeuristicMinDistanceBridges), nil
+	case "mindistance-bridges-both":
+		return HeuristicFunc(HeuristicMinDistanceBridgesBoth), nil
 	default:
 		return nil, fmt.Errorf("invalid heuristic: %s", h)
 	}
 }
 
-func minDistance(b *Board, player PlayerID, bridges bool) int {
+func minDistance(b *Board, player PlayerID, bridges, both bool) int {
 	M := make([][]int, b.Size+6)
 	for i := range M {
 		M[i] = make([]int, b.Size+6)
@@ -68,6 +70,15 @@ func minDistance(b *Board, player PlayerID, bridges bool) int {
 				continue
 			}
 			if inBoard(v, b.Size) && b.Matrix[v.I][v.J] != oponent {
+				if both && inBoard(u, b.Size) {
+					x := Move{u.I + di[(d+5)%6], u.J + dj[(d+5)%6]}
+					y := Move{u.I + di[(d+1)%6], u.J + dj[(d+1)%6]}
+
+					if inBoard(x, b.Size) && inBoard(y, b.Size) && b.Matrix[u.I][u.J] == NoOne && b.Matrix[v.I][v.J] == NoOne && b.Matrix[x.I][x.J] == oponent && b.Matrix[y.I][y.J] == oponent {
+						continue
+					}
+				}
+
 				connected := connect(b, []Move{v}, player, M, M[u.I+3][u.J+3]+1, bridges)
 				for _, v := range connected {
 					if inBoard(v, b.Size) {
@@ -121,12 +132,20 @@ func minDistance(b *Board, player PlayerID, bridges bool) int {
 // Max player to win minus the minimum number of moves required for Min
 // player to win.
 func HeuristicMinDistance(b *Board) int {
-	return minDistance(b, Min, false) - minDistance(b, Max, false)
+	return minDistance(b, Min, false, false) - minDistance(b, Max, false, false)
 }
 
 // HeuristicMinDistanceBridges returns the minimum number of moves
 // required for Max player to win minus the minimum number of moves
 // required for Min player to win considering bridges to be connected.
 func HeuristicMinDistanceBridges(b *Board) int {
-	return minDistance(b, Min, true) - minDistance(b, Max, true)
+	return minDistance(b, Min, true, false) - minDistance(b, Max, true, false)
+}
+
+// HeuristicMinDistanceBridgesBoth returns the minimum number of moves
+// required for Max player to win minus the minimum number of moves
+// required for Min player to win considering bridges to be connected
+// for both players.
+func HeuristicMinDistanceBridgesBoth(b *Board) int {
+	return minDistance(b, Min, true, true) - minDistance(b, Max, true, true)
 }
