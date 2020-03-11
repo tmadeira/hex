@@ -28,10 +28,12 @@ class http extends player {
       body: JSON.stringify(body),
     };
 
+    const start = new Date();
     fetch(endpoint, request)
       .then(response => response.json())
       .then(data => {
-        console.log('Expected outcome:', data.expectedOutcome);
+        const elapsed = new Date() - start;
+        console.log('Elapsed:', elapsed, 'ms. Move:', data.move, '. Expected outcome:', data.expectedOutcome, '.');
         callback(data.move[0], data.move[1]);
       });
   }
