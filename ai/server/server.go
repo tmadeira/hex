@@ -9,11 +9,15 @@ import (
 	"github.com/tmadeira/hex/ai"
 )
 
-func handlePlay(player *ai.Player) http.HandlerFunc {
+func handlePlay() http.HandlerFunc {
 	type request struct {
-		Size   int     `json:"size"`
-		Matrix [][]int `json:"matrix"`
-		Last   []int   `json:"last"`
+		PlayerID  int     `json:"id"`
+		Strategy  string  `json:"strategy"`
+		Depth     int     `json:"depth"`
+		Heuristic string  `json:"heuristic"`
+		Size      int     `json:"size"`
+		Matrix    [][]int `json:"matrix"`
+		Last      []int   `json:"last"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -51,6 +55,13 @@ func handlePlay(player *ai.Player) http.HandlerFunc {
 			b.LastMove = &ai.Move{I: in.Last[0], J: in.Last[1]}
 		}
 
+		heuristicFunc, err := ai.Heuristic(in.Heuristic)
+		if err != nil {
+			http.Error(w, "Invalid heuristic "+in.Heuristic, http.StatusBadRequest)
+			return
+		}
+
+		player := ai.NewPlayer(ai.PlayerID(in.PlayerID), in.Strategy, in.Depth, heuristicFunc)
 		mv, v, err := player.Play(b)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Can't play: %v", err), http.StatusInternalServerError)
@@ -77,20 +88,11 @@ func handlePlay(player *ai.Player) http.HandlerFunc {
 }
 
 // Run runs Hex AI HTTP server in the specified TCP port.
-func Run(port, pID int, strategy, heuristic string) {
-	playerID := ai.PlayerID(pID)
-	heuristicFunc, err := ai.Heuristic(heuristic)
-	if err != nil {
-		log.Fatal(err)
-	}
+func Run(port int) {
+	http.HandleFunc("/play", handlePlay())
 
-	player := ai.NewPlayer(playerID, strategy, heuristicFunc)
-	http.HandleFunc("/play", handlePlay(player))
-
-	log.Printf("Created AI player with strategy %s and heuristic %s", strategy, heuristic)
 	log.Printf("Starting server on port %d", port)
-
 	listen := fmt.Sprintf(":%d", port)
-	err = http.ListenAndServe(listen, nil)
+	err := http.ListenAndServe(listen, nil)
 	log.Fatal(err)
 }

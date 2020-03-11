@@ -33,12 +33,13 @@ const (
 type Player struct {
 	ID        PlayerID
 	Strategy  string
+	Depth     int
 	Heuristic HeuristicFunc
 }
 
 // NewPlayer returns a new AI player with given ID, strategy and heuristic.
-func NewPlayer(id PlayerID, strategy string, heuristic HeuristicFunc) *Player {
-	return &Player{id, strategy, heuristic}
+func NewPlayer(id PlayerID, strategy string, depth int, heuristic HeuristicFunc) *Player {
+	return &Player{id, strategy, depth, heuristic}
 }
 
 // Play receives a board state and returns a move and the outcome it expects
@@ -52,9 +53,9 @@ func (p *Player) Play(b Board) (*Move, int, error) {
 	var outcome int
 	switch p.Strategy {
 	case "minimax":
-		mv, outcome = p.Minimax(b, 5)
+		mv, outcome = p.Minimax(b, p.Depth)
 	case "ab-minimax":
-		mv, outcome = p.ABMinimax(b, 5)
+		mv, outcome = p.ABMinimax(b, p.Depth)
 	default:
 		return nil, 0, fmt.Errorf("invalid strategy: %s", p.Strategy)
 	}
