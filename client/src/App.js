@@ -16,33 +16,33 @@ class App extends Component {
     const human = 'human';
     const random = new rand(n);
 
-    const mindist = new http(n, {
-      strategy: 'ab-minimax',
-      depth: 5,
-      heuristic: 'mindistance',
-    });
+    const mindist = d => (
+      new http(n, {
+        strategy: 'ab-minimax',
+        depth: d,
+        heuristic: 'mindistance',
+      })
+    );
 
-    const bridges = new http(n, {
-      strategy: 'ab-minimax',
-      depth: 5,
-      heuristic: 'mindistance-bridges',
-    });
+    const bridges = d => (
+      new http(n, {
+        strategy: 'ab-minimax',
+        depth: d,
+        heuristic: 'mindistance-bridges',
+      })
+    );
 
-    const both1 = new http(n, {
-      strategy: 'ab-minimax',
-      depth: 1,
-      heuristic: 'mindistance-bridges-both',
-    });
-
-    const both = new http(n, {
-      strategy: 'ab-minimax',
-      depth: 5,
-      heuristic: 'mindistance-bridges-both',
-    });
+    const both = d => (
+      new http(n, {
+        strategy: 'ab-minimax',
+        depth: d,
+        heuristic: 'mindistance-bridges-both',
+      })
+    );
 
     return (
       <div className="App">
-        <Board delay={300} n={n} players={[human, both]} restart={false} />
+        <Board delay={300} n={n} players={[human, both(5)]} restart={false} />
       </div>
     );
   }
