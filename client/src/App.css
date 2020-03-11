@@ -18,12 +18,21 @@ svg {
 polygon {
   fill: white;
   stroke: black;
+  transition: all .2s cubic-bezier(.4, 0, .2, 1);
 }
 
 .red {
   fill: rgba(255, 0, 0, 0.3);
 }
 
+.last.red {
+  fill: rgba(255, 0, 0, 0.5);
+}
+
 .blue {
   fill: rgba(0, 0, 255, 0.3);
+}
+
+.last.blue {
+  fill: rgba(0, 0, 255, 0.5);
 }

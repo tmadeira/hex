@@ -43,6 +43,7 @@ class Board extends Component {
     this.state = {
       blocked: true,
       board: board,
+      last: [-1, -1],
       turn: RED,
     };
   }
@@ -75,7 +76,7 @@ class Board extends Component {
     board[X][Y] = this.state.turn;
 
     const turn = this.state.turn === RED ? BLUE : RED;
-    this.setState({blocked: true, board, turn});
+    this.setState({blocked: true, board, turn, last: [X, Y]});
 
     window.setTimeout(() => {
       if (winner(this.state.board)) {
@@ -161,7 +162,13 @@ class Board extends Component {
           {
             Array.from(Array(this.props.n).keys()).map(i =>
               Array.from(Array(this.props.n).keys()).map(j =>
-                <polygon className={this.color(i, j)} key={`${i} ${j}`} data-coords={`${i} ${j}`} onClick={() => this.click(i, j)} points={this.points(i, j)} />
+                <polygon
+                  className={this.color(i, j) + (i === this.state.last[0] && j === this.state.last[1] ? ' last' : '')}
+                  key={`${i} ${j}`}
+                  data-coords={`${i} ${j}`}
+                  onClick={() => this.click(i, j)}
+                  points={this.points(i, j)}
+                />
               )
             )
           }

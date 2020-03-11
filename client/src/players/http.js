@@ -33,7 +33,7 @@ class http extends player {
       .then(response => response.json())
       .then(data => {
         const elapsed = new Date() - start;
-        console.log('Elapsed:', elapsed, 'ms. Move:', data.move, '. Expected outcome:', data.expectedOutcome, '.');
+        console.log('Player', whoami, '- Elapsed:', elapsed, 'ms. Move:', data.move, '. Expected outcome:', data.expectedOutcome, '.');
         callback(data.move[0], data.move[1]);
       });
   }
