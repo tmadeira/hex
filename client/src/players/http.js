@@ -1,12 +1,19 @@
 import player from './player';
 
 class http extends player {
+  constructor(n, {strategy, depth, heuristic}) {
+    super(n);
+    this.strategy = strategy;
+    this.depth = depth;
+    this.heuristic = heuristic;
+  }
+
   play(board, whoami, last, callback) {
     const body = {
       id: whoami,
-      strategy: 'ab-minimax',
-      depth: 5,
-      heuristic: 'mindistance-bridges',
+      strategy: this.strategy,
+      depth: this.depth,
+      heuristic: this.heuristic,
       size: this.n,
       matrix: board,
       last: last,
