@@ -46,6 +46,8 @@ class Board extends Component {
       last: [-1, -1],
       turn: RED,
     };
+
+    this.baseState = JSON.parse(JSON.stringify(this.state));
   }
 
   componentDidMount() {
@@ -80,7 +82,14 @@ class Board extends Component {
 
     window.setTimeout(() => {
       if (winner(this.state.board)) {
-        alert('Game over!');
+        if (this.props.restart) {
+          window.setTimeout(() => {
+            this.setState(JSON.parse(JSON.stringify(this.baseState)));
+            this.componentDidMount();
+          }, 1000);
+        } else {
+          alert('Game over!');
+        }
         return;
       }
 
@@ -186,6 +195,7 @@ Board.propTypes = {
   delay: PropTypes.number,
   n: PropTypes.number,
   players: PropTypes.array,
+  restart: PropTypes.bool,
 };
 
 export default Board;

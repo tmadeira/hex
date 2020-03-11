@@ -25,6 +25,11 @@ class App extends Component {
       depth: 5,
       heuristic: 'mindistance-bridges',
     });
+    const both1 = new http(n, {
+      strategy: 'ab-minimax',
+      depth: 1,
+      heuristic: 'mindistance-bridges-both',
+    });
     const both = new http(n, {
       strategy: 'ab-minimax',
       depth: 5,
@@ -33,7 +38,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Board delay={delay} n={n} players={[random, both]} />
+        <Board delay={delay} n={n} players={[random, both1]} restart={true} />
       </div>
     );
   }
